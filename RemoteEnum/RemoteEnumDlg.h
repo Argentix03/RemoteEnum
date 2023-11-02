@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include "ntsecapi.h"
 
 // CRemoteEnumDlg dialog
 class CRemoteEnumDlg : public CDialogEx
@@ -41,4 +41,8 @@ public:
 	CEdit m_txtOutput;
 	void AppendTextToOutput(const CString& str);
 	CString SidToString(PSID pSid);
+	LSA_HANDLE m_policyHandle;
+	afx_msg void OnBnClickedButtonUsersWithPerm();
+	CComboBox m_cboRights;
+	afx_msg void OnBnClickedButton3();
 };

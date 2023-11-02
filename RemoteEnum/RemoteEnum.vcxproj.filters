@@ -39,6 +39,9 @@
     <ClInclude Include="CRightsDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CUserRightsSelection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RemoteEnum.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CRightsDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CUserRightsSelection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,13 +7,14 @@
 #include "RemoteEnum.h"
 #include "RemoteEnumDlg.h"
 #include "CRightsDialog.h"
+#include "CUserRightsSelection.h"
 #include "afxdialogex.h"
 #include "ntstatus.h"
 #include <sddl.h>
 #include <sstream>
 
-#include "C:\\Projects\\EnumLib\\EnumLib\\EnumLib\\EnumLib.h"
-#pragma comment(lib, "C:\\Projects\\EnumLib\\EnumLib\\x64\\Debug\\EnumLib")
+#include "..\\..\\EnumLib\EnumLib\EnumLib.h"
+#pragma comment(lib, "C:\\Users\\User\\source\\repos\\EnumLib\\EnumLib\\x64\\Release\\EnumLib.lib")
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -39,6 +40,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButtonGetHandle();
+	afx_msg void OnLbnSelchangeListPermissions();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -52,6 +54,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_GET_HANDLE, &CAboutDlg::OnBnClickedButtonGetHandle)
+	ON_LBN_SELCHANGE(IDC_LIST_PERMISSIONS, &CAboutDlg::OnLbnSelchangeListPermissions)
 END_MESSAGE_MAP()
 
 
@@ -71,6 +74,7 @@ void CRemoteEnumDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_REMOTE_COMPUTER, m_ComputerName);
 	DDX_Control(pDX, IDC_OUTPUT, m_txtOutput);
+	DDX_Control(pDX, IDC_COMBO_RIGHTS, m_cboRights);
 }
 
 BEGIN_MESSAGE_MAP(CRemoteEnumDlg, CDialogEx)
@@ -79,6 +83,8 @@ BEGIN_MESSAGE_MAP(CRemoteEnumDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON_GET_HANDLE, &CRemoteEnumDlg::OnBnClickedButtonGetHandle)
 	ON_EN_CHANGE(IDC_OUTPUT, &CRemoteEnumDlg::OnEnChangeOutput)
+	ON_BN_CLICKED(IDC_BUTTON_USERS_WITH_PERM, &CRemoteEnumDlg::OnBnClickedButtonUsersWithPerm)
+	ON_BN_CLICKED(IDC_BUTTON3, &CRemoteEnumDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -114,6 +120,52 @@ BOOL CRemoteEnumDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+
+	m_cboRights.AddString(_T("SeTrustedCredManAccessPrivilege"));
+	m_cboRights.AddString(_T("SeNetworkLogonRight"));
+	m_cboRights.AddString(_T("SeTcbPrivilege"));
+	m_cboRights.AddString(_T("SeMachineAccountPrivilege"));
+	m_cboRights.AddString(_T("SeIncreaseQuotaPrivilege"));
+	m_cboRights.AddString(_T("SeInteractiveLogonRight"));
+	m_cboRights.AddString(_T("SeRemoteInteractiveLogonRight"));
+	m_cboRights.AddString(_T("SeBackupPrivilege"));
+	m_cboRights.AddString(_T("SeChangeNotifyPrivilege"));
+	m_cboRights.AddString(_T("SeSystemtimePrivilege"));
+	m_cboRights.AddString(_T("SeTimeZonePrivilege"));
+	m_cboRights.AddString(_T("SeCreatePagefilePrivilege"));
+	m_cboRights.AddString(_T("SeCreateTokenPrivilege"));
+	m_cboRights.AddString(_T("SeCreateGlobalPrivilege"));
+	m_cboRights.AddString(_T("SeCreatePermanentPrivilege"));
+	m_cboRights.AddString(_T("SeCreateSymbolicLinkPrivilege"));
+	m_cboRights.AddString(_T("SeDebugPrivilege"));
+	m_cboRights.AddString(_T("SeDenyNetworkLogonRight"));
+	m_cboRights.AddString(_T("SeDenyBatchLogonRight"));
+	m_cboRights.AddString(_T("SeDenyServiceLogonRight"));
+	m_cboRights.AddString(_T("SeDenyInteractiveLogonRight"));
+	m_cboRights.AddString(_T("SeDenyRemoteInteractiveLogonRight"));
+	m_cboRights.AddString(_T("SeEnableDelegationPrivilege"));
+	m_cboRights.AddString(_T("SeRemoteShutdownPrivilege"));
+	m_cboRights.AddString(_T("SeAuditPrivilege"));
+	m_cboRights.AddString(_T("SeImpersonatePrivilege"));
+	m_cboRights.AddString(_T("SeIncreaseWorkingSetPrivilege"));
+	m_cboRights.AddString(_T("SeIncreaseBasePriorityPrivilege"));
+	m_cboRights.AddString(_T("SeLoadDriverPrivilege"));
+	m_cboRights.AddString(_T("SeLockMemoryPrivilege"));
+	m_cboRights.AddString(_T("SeBatchLogonRight"));
+	m_cboRights.AddString(_T("SeServiceLogonRight"));
+	m_cboRights.AddString(_T("SeSecurityPrivilege"));
+	m_cboRights.AddString(_T("SeRelabelPrivilege"));
+	m_cboRights.AddString(_T("SeSystemEnvironmentPrivilege"));
+	m_cboRights.AddString(_T("SeDelegateSessionUserImpersonatePrivilege"));
+	m_cboRights.AddString(_T("SeManageVolumePrivilege"));
+	m_cboRights.AddString(_T("SeProfileSingleProcessPrivilege"));
+	m_cboRights.AddString(_T("SeSystemProfilePrivilege"));
+	m_cboRights.AddString(_T("SeUndockPrivilege"));
+	m_cboRights.AddString(_T("SeAssignPrimaryTokenPrivilege"));
+	m_cboRights.AddString(_T("SeRestorePrivilege"));
+	m_cboRights.AddString(_T("SeShutdownPrivilege"));
+	m_cboRights.AddString(_T("SeSyncAgentPrivilege"));
+	m_cboRights.AddString(_T("SeTakeOwnershipPrivilege"));
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -196,27 +248,8 @@ void CRemoteEnumDlg::OnBnClickedButtonGetHandle()
 		else
 		{
 			AppendTextToOutput(_T("LSA policy handle obtained successfully."));
-
-			std::vector<SID*> sids = EnumerateUserSIDs(policyHandle, L"SeInteractiveLogonRight");
-			std::vector<std::wstring> names = TranslateSidsToNames(policyHandle, sids);
-			std::vector<PSID> remoteUserSids = LookupUserNamesToSids(policyHandle, names);
-
-			// Print names and SIDs
-			AppendTextToOutput(_T("\r\nAccount Name\t\tSID\r\n"));
-			AppendTextToOutput(CString('-', 60) + _T("\r\n"));  // Draws a line separator
-
-			for (size_t i = 0; i < remoteUserSids.size() && i < names.size(); ++i)
-			{
-				CString wname(names[i].c_str());
-				CString wSidString = SidToString(remoteUserSids[i]);
-				CString line = wname + _T("\t\t") + wSidString + _T("\r\n");
-
-				AppendTextToOutput(line);
-			}
-
-
+			m_policyHandle = policyHandle;
 		}
-
 
 		m_ComputerName.ReleaseBuffer();
 
@@ -271,3 +304,69 @@ void CRemoteEnumDlg::AppendTextToOutput(const CString& str)
 	m_txtOutput.ReplaceSel(str);
 }
 
+
+
+void CRemoteEnumDlg::OnBnClickedButtonUsersWithPerm()
+{
+	CUserRightsSelection rightsSelectionDlg;
+
+	// Show the permission selection dialog
+	if (rightsSelectionDlg.DoModal() == IDOK)
+	{
+		// Get the selected permission
+		CString selectedPermission = rightsSelectionDlg.GetSelectedPermission();
+
+		// Convert CString to std::wstring
+		std::wstring permissionStr(selectedPermission.GetString());
+
+		std::vector<SID*> sids = EnumerateUserSIDs(m_policyHandle, permissionStr.c_str());
+		std::vector<std::wstring> names = TranslateSidsToNames(m_policyHandle, sids);
+		std::vector<PSID> remoteUserSids = LookupUserNamesToSids(m_policyHandle, names);
+
+		// Print names and SIDs
+		AppendTextToOutput(_T("\r\nAccount Name\t\tSID\r\n"));
+		AppendTextToOutput(CString('-', 60) + _T("\r\n"));  // Draws a line separator
+
+		for (size_t i = 0; i < remoteUserSids.size() && i < names.size(); ++i)
+		{
+			CString wname(names[i].c_str());
+			CString wSidString = SidToString(remoteUserSids[i]);
+			CString line = wname + _T("\t\t") + wSidString + _T("\r\n");
+
+			AppendTextToOutput(line);
+		}
+	}
+}
+
+
+void CAboutDlg::OnLbnSelchangeListPermissions()
+{
+	// TODO: Add your control notification handler code here
+}
+
+
+void CRemoteEnumDlg::OnBnClickedButton3()
+{
+	// TODO: Add your control notification handler code here
+	CString strSelectedRight;
+	m_cboRights.GetLBText(m_cboRights.GetCurSel(), strSelectedRight);
+
+	std::wstring permissionStr(strSelectedRight.GetString());
+
+	std::vector<SID*> sids = EnumerateUserSIDs(m_policyHandle, permissionStr.c_str());
+	std::vector<std::wstring> names = TranslateSidsToNames(m_policyHandle, sids);
+	std::vector<PSID> remoteUserSids = LookupUserNamesToSids(m_policyHandle, names);
+
+	// Print names and SIDs
+	AppendTextToOutput(_T("\r\nAccount Name\t\tSID\r\n"));
+	AppendTextToOutput(CString('-', 60) + _T("\r\n"));  // Draws a line separator
+
+	for (size_t i = 0; i < remoteUserSids.size() && i < names.size(); ++i)
+	{
+		CString wname(names[i].c_str());
+		CString wSidString = SidToString(remoteUserSids[i]);
+		CString line = wname + _T("\t\t") + wSidString + _T("\r\n");
+
+		AppendTextToOutput(line);
+	}
+}
