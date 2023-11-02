@@ -1,8 +1,8 @@
 # RemoteEnum
 A fun little tool to enumerate permissions on a remote machine based on LSA Policy Objects. My main goal is just to try out some Windows GUI basics.  
 
-- [ ] Getting handles with various permissions
-- [ ] Getting users allowed for a specified permissions
+- [x] Getting handles with various permissions
+- [x] Getting users allowed for a specified permissions
       - [Reference](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-rights-assignment)
 - [ ] Getting handles to talk with authentication packages
 - [ ] Enumerating authentication packages
